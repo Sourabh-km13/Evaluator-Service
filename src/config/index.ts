@@ -1,3 +1,3 @@
-const Port:Number = 3000
+const Port: number = 3000;
 
-export {Port}
+export { Port };
