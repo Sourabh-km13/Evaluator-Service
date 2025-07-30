@@ -6,7 +6,7 @@
     "build": "npx tsc",
     "prestart": "npm run build",
     "watch": "npx tsc --watch",
-    "start": "npx nodemon dist/src/index.js",
+    "start": "npx nodemon dist/index.js",
     "dev": "npx concurrently \"npm run watch\" \"npm run start\""
   },
   "keywords": [],
