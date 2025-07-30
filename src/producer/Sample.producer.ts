@@ -1,7 +1,8 @@
+import logger from "../config/logger.config"
 import SampleQueue from "../queues/Sample.queue"
 
 async function sampleQueueProducer(name:string , payload:Record<string,unknown>) {
-    console.log('adding to queue')
+    logger.info('adding a job in the queue')
     await SampleQueue.add(name , payload)
     console.log("successfully added new job")
 }
