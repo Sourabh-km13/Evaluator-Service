@@ -15,8 +15,10 @@ const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard({
   serverAdapter: serverAdapter,
 });
 const app = express();
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded());
+app.use(express.text());
 
 app.use("/admin/queues", serverAdapter.getRouter());
 app.use("/api", apiRouter);
