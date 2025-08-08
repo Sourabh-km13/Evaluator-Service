@@ -1,4 +1,4 @@
-export interface WorkerResponse{
-    status:number,
-    message:string
+export interface WorkerResponse {
+  status: number;
+  message: string;
 }

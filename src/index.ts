@@ -8,6 +8,9 @@ import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import { ExpressAdapter } from "@bull-board/express";
 import SampleQueue from "./queues/Sample.queue";
 import runPython from "./containers/runPythonDocker";
+import runJava from "./containers/runJavaDocker";
+import { Cpp_Image } from "./utils/constants";
+import runcpp from "./containers/runCpp";
 
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath("/admin/queues");
@@ -33,13 +36,34 @@ app.get("/", (req, res) => {
 app.listen(Port, () => {
   console.log("server running on port:", Port);
   SampleWorker("SampleQueue");
-  sampleQueueProducer("SampleJob", {
-    name: "Sourabh",
-    company: "Hack2skill",
-    postion: "Intern",
-    location: "Noida",
-  });
-  // eslint-disable-next-line quotes
-  const code = `x= input();y= input();print("value of x is:", x);print("value of y is:", y);`;
-  runPython(code, "100\n200");
+  // const code = `x= input();y= input();print("value of x is:", x);print("value of y is:", y);`;
+  // runPython(code, "100\n200");
+
+  // const code = `
+  // import java.util.*;
+  // public class Main{
+  //   public static void main(String[] args){
+  //     Scanner sc = new Scanner(System.in);
+  //     int input = sc.nextInt();
+  //     for(int i =0;i<input;i++){
+  //       System.out.println(i);
+  //     }
+  //   }
+  // }
+  // `;
+  // runJava(code, "100");
+  const code = `
+  #include <iostream>
+  using namespace std;
+  int main(){
+    int x;
+    cin>>x;
+    cout<<"value of x is:"<<x<<endl;
+    for(int i = 0; i < x; i++){
+      cout<<i <<" ";
+    }
+    return 0;
+  }
+  `;
+  runcpp(code, "10");
 });
