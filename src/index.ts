@@ -7,6 +7,7 @@ import { createBullBoard } from "@bull-board/api";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import { ExpressAdapter } from "@bull-board/express";
 import SampleQueue from "./queues/Sample.queue";
+import runPython from "./containers/runPythonDocker";
 
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath("/admin/queues");
@@ -38,4 +39,7 @@ app.listen(Port, () => {
     postion: "Intern",
     location: "Noida",
   });
+  // eslint-disable-next-line quotes
+  const code = `x= input();y= input();print("value of x is:", x);print("value of y is:", y);`;
+  runPython(code, "100\n200");
 });
