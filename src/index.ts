@@ -11,11 +11,14 @@ import runPython from "./containers/runPythonDocker";
 import runJava from "./containers/runJavaDocker";
 import { Cpp_Image } from "./utils/constants";
 import runcpp from "./containers/runCpp";
+import SubmissionWorker from "./worker/Submission.worker";
+import SubmissionQueueProducer from "./producer/Submission.producer";
+import SubmissionQueue from "./queues/Submission.queue";
 
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath("/admin/queues");
 const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard({
-  queues: [new BullMQAdapter(SampleQueue)],
+  queues: [new BullMQAdapter(SampleQueue), new BullMQAdapter(SubmissionQueue)],
   serverAdapter: serverAdapter,
 });
 const app = express();
@@ -36,6 +39,9 @@ app.get("/", (req, res) => {
 app.listen(Port, () => {
   console.log("server running on port:", Port);
   SampleWorker("SampleQueue");
+
+  SubmissionWorker("SubmissionQueue");
+
   // const code = `x= input();y= input();print("value of x is:", x);print("value of y is:", y);`;
   // runPython(code, "100\n200");
 
@@ -52,6 +58,7 @@ app.listen(Port, () => {
   // }
   // `;
   // runJava(code, "100");
+  const inputCase = "10";
   const code = `
   #include <iostream>
   using namespace std;
@@ -65,5 +72,12 @@ app.listen(Port, () => {
     return 0;
   }
   `;
-  runcpp(code, "10");
+  SubmissionQueueProducer({
+    "1234": {
+      language: "cpp",
+      inputCase,
+      code,
+    },
+  });
+  // runcpp(code, "10");
 });
