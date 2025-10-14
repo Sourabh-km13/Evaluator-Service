@@ -1,7 +1,6 @@
 import { Job } from "bullmq";
 import { IJob } from "../types/BullmqJobType";
 import { SubmissionPayloadType } from "../types/SubmissionPayload";
-import runcpp from "../containers/cppExecutor";
 import createExecutor from "../utils/ExecutorFactory";
 import { ExecutionResponseType } from "../containers/codeEvaluatorStrategy";
 class SubmissionJob implements IJob {
@@ -12,7 +11,7 @@ class SubmissionJob implements IJob {
     this.payload = payload;
   }
   handle = async (job?: Job) => {
-    if (job) {
+    if (job && this.payload) {
       const keys = Object.keys(this.payload)[0];
       console.log(keys);
       const language = this.payload[keys].language;
