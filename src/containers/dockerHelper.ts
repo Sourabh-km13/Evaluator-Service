@@ -1,7 +1,9 @@
 import { dockerStreamType } from "../types/dockerStreamType";
 import { Header_Size } from "../utils/constants";
 
-function decodeDockerStream(buffer: Buffer) {
+//every chunk has a header and a value header has the informaiton about type of stream
+// first chunk is a header which will determine wheter a string is input or error.
+export function decodeDockerStream(buffer: Buffer) {
   let offset = 0;
   const output: dockerStreamType = { stdout: "", stderr: "" };
 
@@ -22,7 +24,22 @@ function decodeDockerStream(buffer: Buffer) {
   }
   return output;
 }
-
-export default decodeDockerStream;
-//every chunk has a header and a value header has the informaiton about type of stream
-// first chunk is a header which will determine wheter a string is input or error.
+export async function fetchDecodedStream(
+  loggerStream: NodeJS.ReadableStream,
+  rawLogBuffer: Buffer[],
+): Promise<string> {
+  return new Promise((res, rej) => {
+    loggerStream.on("end", () => {
+      console.log(rawLogBuffer);
+      const completeBuffer = Buffer.concat(rawLogBuffer);
+      console.log(completeBuffer);
+      const decodedStream = decodeDockerStream(completeBuffer);
+      console.log(decodedStream);
+      if (decodedStream.stderr) {
+        rej(decodedStream.stderr);
+      } else {
+        res(decodedStream.stdout);
+      }
+    });
+  });
+}
