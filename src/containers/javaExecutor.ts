@@ -10,13 +10,14 @@ import { fetchDecodedStream } from "./dockerHelper";
 class JavaExecutor implements CodeEvaluationStrategy {
   async execute(
     code: string,
-    testCases: string,
+    inputTestCase: string,
+    outputTestCase: string,
   ): Promise<ExecutionResponseType> {
     const rawLogBuffer: Buffer[] = [];
 
     console.log("Initializing new java container");
     // eslint-disable-next-line quotes
-    const runCommand = `echo '${code.replace(/'/g, `'\\"`)}'> Main.java && javac Main.java && echo '${testCases.replace(/'/g, `'\\"`)}' | java Main`;
+    const runCommand = `echo '${code.replace(/'/g, `'\\"`)}'> Main.java && javac Main.java && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | java Main`;
     const javaDockerContainer = await createContainer(Java_Image, [
       "/bin/sh",
       "-c",
@@ -35,9 +36,9 @@ class JavaExecutor implements CodeEvaluationStrategy {
     });
     try {
       const codeResponse = await fetchDecodedStream(loggerStream, rawLogBuffer);
-      return { output: codeResponse, status: "Completed " };
+      return { output: codeResponse, status: "COMPLETED" };
     } catch (error) {
-      return { output: error as string, status: "Rejected" };
+      return { output: error as string, status: "REJECTED" };
     } finally {
       javaDockerContainer.remove();
     }

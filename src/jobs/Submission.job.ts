@@ -13,15 +13,17 @@ class SubmissionJob implements IJob {
   handle = async (job?: Job) => {
     if (job && this.payload) {
       const keys = Object.keys(this.payload)[0];
-      console.log(keys);
       const language = this.payload[keys].language;
       const code = this.payload[keys].code;
-      const testCases = this.payload[keys].inputCase;
+      const inputTestCase = this.payload[keys].inputTestCase;
+      const outputTestCase = this.payload[keys].outputTestCase;
+      console.log(language, inputTestCase, outputTestCase);
       const strategy = createExecutor(language);
       if (strategy !== null) {
         const response: ExecutionResponseType = await strategy.execute(
           code,
-          testCases,
+          inputTestCase,
+          outputTestCase,
         );
         if (response.status === "COMPLETED") {
           console.log("Code executed succesfully");

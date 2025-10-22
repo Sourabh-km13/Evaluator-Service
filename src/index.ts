@@ -1,18 +1,13 @@
 import express from "express";
 import { Port } from "./config/index";
 import apiRouter from "./routes/index";
-import sampleQueueProducer from "./producer/Sample.producer";
 import SampleWorker from "./worker/Sample.worker";
 import { createBullBoard } from "@bull-board/api";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import { ExpressAdapter } from "@bull-board/express";
 import SampleQueue from "./queues/Sample.queue";
-import runPython from "./containers/pythonExecutor";
-import runJava from "./containers/javaExecutor";
-import { Cpp_Image } from "./utils/constants";
-import runcpp from "./containers/cppExecutor";
+
 import SubmissionWorker from "./worker/Submission.worker";
-import SubmissionQueueProducer from "./producer/Submission.producer";
 import SubmissionQueue from "./queues/Submission.queue";
 
 const serverAdapter = new ExpressAdapter();
@@ -21,6 +16,7 @@ const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard({
   queues: [new BullMQAdapter(SampleQueue), new BullMQAdapter(SubmissionQueue)],
   serverAdapter: serverAdapter,
 });
+
 const app = express();
 
 app.use(express.json());
@@ -58,26 +54,25 @@ app.listen(Port, () => {
   // }
   // `;
   // runJava(code, "100");
-  const inputCase = "10";
-  const code = `
-  #include <iostream>
-  using namespace std;
-  int main(){
-    int x;
-    cin>>x;
-    cout<<"value of x is:"<<x<<endl;
-    for(int i = 0; i < x; i++){
-      cout<<i <<" ";
-    }
-    return 0;
-  }
-  `;
-  SubmissionQueueProducer({
-    "1234": {
-      language: "cpp",
-      inputCase,
-      code,
-    },
-  });
-  // runcpp(code, "10");
+  // const inputCase = "10";
+  // const code = `
+  // #include <iostream>
+  // using namespace std;
+  // int main(){
+  //   int x;
+  //   cin>>x;
+  //   cout<<"value of x is:"<<x<<endl;
+  //   for(int i = 0; i < x; i++){
+  //     cout<<i <<" ";
+  //   }
+  //   return 0;
+  // }
+  // `;
+  // SubmissionQueueProducer({
+  //   "1234": {
+  //     language: "cpp",
+  //     inputCase,
+  //     code,
+  //   },
+  // });
 });

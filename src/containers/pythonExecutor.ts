@@ -10,13 +10,14 @@ import {
 class PythonExecutor implements CodeEvaluationStrategy {
   async execute(
     code: string,
-    testCases: string,
+    inputTestCase: string,
+    outputTestCase: string,
   ): Promise<ExecutionResponseType> {
     const rawLogBuffer: Buffer[] = [];
 
     console.log("Initializing new python container");
     // eslint-disable-next-line quotes
-    const runCommand = `echo '${code.replace(/'/g, `'\\"`)}'> test.py && echo '${testCases.replace(/'/g, `'\\"`)}' | python3 test.py`;
+    const runCommand = `echo '${code.replace(/'/g, `'\\"`)}'> test.py && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | python3 test.py`;
     const pythonDockerContainer = await createContainer(Python_Image, [
       "/bin/sh",
       "-c",

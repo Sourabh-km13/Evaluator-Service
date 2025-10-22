@@ -3,13 +3,13 @@ import JavaExecutor from "../containers/javaExecutor";
 import PythonExecutor from "../containers/pythonExecutor";
 
 export default function createExecutor(codeLanguage: string) {
-  if (codeLanguage === "PYTHON") {
+  if (codeLanguage?.toLocaleLowerCase() === "python") {
     const pythonExecutor = new PythonExecutor();
     return pythonExecutor;
-  } else if (codeLanguage === "CPP") {
+  } else if (codeLanguage?.toLocaleLowerCase() === "cpp") {
     const cppExecutor = new CppExecutor();
     return cppExecutor;
-  } else if (codeLanguage === "JAVA") {
+  } else if (codeLanguage?.toLocaleLowerCase() === "java") {
     const javaExecutor = new JavaExecutor();
     return javaExecutor;
   } else {

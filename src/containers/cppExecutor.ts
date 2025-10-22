@@ -12,13 +12,14 @@ import { fetchDecodedStream } from "./dockerHelper";
 class CppExecutor implements CodeEvaluationStrategy {
   async execute(
     code: string,
-    testCases: string,
+    inputTestCase: string,
+    outputTestCase: string,
   ): Promise<ExecutionResponseType> {
     const rawLogBuffer: Buffer[] = [];
     await pullImage(Cpp_Image);
     console.log("Initializing new cpp container");
     // eslint-disable-next-line quotes
-    const runCommand = `echo '${code.replace(/'/g, `'\\"`)}'> main.cpp && g++ main.cpp -o main && echo '${testCases.replace(/'/g, `'\\"`)}' | ./main`;
+    const runCommand = `echo '${code.replace(/'/g, `'\\"`)}'> main.cpp && g++ main.cpp -o main && echo '${inputTestCase.replace(/'/g, `'\\"`)}' | ./main`;
     const cppDockerContainer = await createContainer(Cpp_Image, [
       "/bin/sh",
       "-c",

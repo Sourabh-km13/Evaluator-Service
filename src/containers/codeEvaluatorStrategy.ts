@@ -1,4 +1,8 @@
 export interface CodeEvaluationStrategy {
-  execute(code: string, testCases: string): Promise<ExecutionResponseType>;
+  execute(
+    code: string,
+    inputTestCase: string,
+    outputTestCase: string,
+  ): Promise<ExecutionResponseType>;
 }
 export type ExecutionResponseType = { output: string; status: string };
