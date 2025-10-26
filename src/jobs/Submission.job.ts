@@ -3,6 +3,7 @@ import { IJob } from "../types/BullmqJobType";
 import { SubmissionPayloadType } from "../types/SubmissionPayload";
 import createExecutor from "../utils/ExecutorFactory";
 import { ExecutionResponseType } from "../containers/codeEvaluatorStrategy";
+import ResponseQueueProducer from "../producer/Response.producer";
 class SubmissionJob implements IJob {
   name: string;
   payload?: Record<string, SubmissionPayloadType> | undefined;
@@ -17,6 +18,7 @@ class SubmissionJob implements IJob {
       const code = this.payload[keys].code;
       const inputTestCase = this.payload[keys].inputTestCase;
       const outputTestCase = this.payload[keys].outputTestCase;
+      const userId = this.payload[keys].userId;
       console.log(language, inputTestCase, outputTestCase);
       const strategy = createExecutor(language);
       if (strategy !== null) {
@@ -25,6 +27,10 @@ class SubmissionJob implements IJob {
           inputTestCase,
           outputTestCase,
         );
+        ResponseQueueProducer({
+          status: response.status,
+          userId: userId,
+        });
         if (response.status === "COMPLETED") {
           console.log("Code executed succesfully");
         } else {

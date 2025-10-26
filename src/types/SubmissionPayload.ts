@@ -3,4 +3,5 @@ export type SubmissionPayloadType = {
   code: string;
   inputTestCase: string;
   outputTestCase: string;
+  userId: string;
 };

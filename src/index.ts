@@ -1,11 +1,10 @@
 import express from "express";
 import { Port } from "./config/index";
 import apiRouter from "./routes/index";
-import SampleWorker from "./worker/Sample.worker";
 import { createBullBoard } from "@bull-board/api";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import { ExpressAdapter } from "@bull-board/express";
-import SampleQueue from "./queues/Sample.queue";
+import SampleQueue from "./queues/Response.queue";
 
 import SubmissionWorker from "./worker/Submission.worker";
 import SubmissionQueue from "./queues/Submission.queue";
@@ -34,7 +33,7 @@ app.get("/", (req, res) => {
 
 app.listen(Port, () => {
   console.log("server running on port:", Port);
-  SampleWorker("SampleQueue");
+  console.log("bull ui running on /admin/queues");
 
   SubmissionWorker("SubmissionQueue");
 
